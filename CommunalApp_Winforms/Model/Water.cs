@@ -8,7 +8,12 @@ namespace CommunalApp_Winforms.Model
         /// <summary>
         /// Цена воды за кубический метр
         /// </summary>
-        public double Price { get; private set; }
+        public double PriceForOne { get; set; }
+        
+        /// <summary>
+        /// Итоговая цена в рублях
+        /// </summary>
+        public double ResultPrice { get; set; }
         /// <summary>
         /// Объем воды в метрах кубических
         /// </summary>
@@ -24,7 +29,7 @@ namespace CommunalApp_Winforms.Model
         /// <summary>
         /// Количество дней
         /// </summary>
-        public TimeSpan CountDays { get; }
+        public TimeSpan CountDays { get; set; }
         /// <summary>
         /// Расчет стоимости воды за указанный период времени
         /// </summary>
@@ -32,16 +37,16 @@ namespace CommunalApp_Winforms.Model
         /// <param name="volume"></param>
         /// <param name="fromDate"></param>
         /// <param name="toDate"></param>
-        public Water(double price, double volume, DateTime fromDate, DateTime toDate)
+        public Water(double priceForOne, double volumeLast,double volumeNow , DateTime fromDate, DateTime toDate)
         {
             #region Проверка
-            if (price <= 0)
+            if (priceForOne <= 0)
             {
-                throw new ArgumentException("Цена не может быть равна или меньше нуля", nameof(price));
+                throw new ArgumentException("Цена не может быть равна или меньше нуля", nameof(priceForOne));
             }
-            if (volume <= 0)
+            if (volumeNow <= 0)
             {
-                throw new ArgumentException("Объем не может быть равен или меньше нуля", nameof(volume));
+                throw new ArgumentException("Объем не может быть равен или меньше нуля", nameof(volumeNow));
             }
             if (fromDate >= DateTime.Now || fromDate <= DateTime.Parse("2010.01.01") || fromDate >= toDate)
             {
@@ -52,16 +57,18 @@ namespace CommunalApp_Winforms.Model
                 throw new ArgumentException("Некорректная дата", nameof(toDate));
             }
             #endregion
-            Volume = volume;
+            Volume = volumeNow - volumeLast;
             CountDays = toDate - fromDate;
-            Price = price * volume * CountDays.Days;
+            PriceForOne = priceForOne;
+            ResultPrice = priceForOne * Volume;
             FromDate = fromDate;
             ToDate = toDate;
         }
 
+
         public override string ToString()
         {
-            return Price.ToString() + "Руб/куб.м";
+            return ResultPrice.ToString() + "Руб/куб.м";
         }
     }
 }

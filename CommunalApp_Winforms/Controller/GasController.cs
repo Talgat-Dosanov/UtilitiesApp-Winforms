@@ -7,8 +7,8 @@ namespace CommunalApp_Winforms.Controller
 {
     public class GasController : ControllerBase<Gas>
     {
-        public List<Gas> GasList { get; }
-
+        public List<Gas> GasList { get; private set; }
+        public Gas newGasData { get; private set; }
         public GasController()
         {
             GasList = base.GetAllItems();
@@ -21,6 +21,18 @@ namespace CommunalApp_Winforms.Controller
         public Gas GetGasInfo(DateTime fromDate, DateTime toDate)
         {
             return Load<Gas>().SingleOrDefault(i => i.FromDate == fromDate && i.ToDate == i.ToDate);
+        }
+        public Gas GetGasLastInfo()
+        {
+            return base.GetLastInfo();
+        }
+        public void SetNewGasData(double price,
+                                    double volumeLast,
+                                    double volumeNow,
+                                    DateTime fromDate,
+                                    DateTime toDate)
+        {
+            newGasData = new Gas(price, volumeLast, volumeNow, fromDate, toDate);
         }
     }
 }

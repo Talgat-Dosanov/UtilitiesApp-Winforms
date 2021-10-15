@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace CommunalApp_Winforms.Controller
 {
@@ -17,5 +18,10 @@ namespace CommunalApp_Winforms.Controller
         {
             base.Save(Service);
         }
+        public T GetLastInfo()
+        {
+            return base.Load<T>().LastOrDefault();
+        }
+        
     }
 }
