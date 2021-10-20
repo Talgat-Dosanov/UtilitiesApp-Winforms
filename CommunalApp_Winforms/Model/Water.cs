@@ -5,6 +5,7 @@ namespace CommunalApp_Winforms.Model
     [Serializable]
     public class Water
     {
+        public string ServiceName { get; private set; }
         /// <summary>
         /// Цена воды за кубический метр
         /// </summary>
@@ -17,7 +18,7 @@ namespace CommunalApp_Winforms.Model
         /// <summary>
         /// Объем воды в метрах кубических
         /// </summary>
-        public double Volume { get; set; }
+        public int Volume { get; set; }
         /// <summary>
         /// Дата начала отсчета
         /// </summary>
@@ -37,26 +38,24 @@ namespace CommunalApp_Winforms.Model
         /// <param name="volume"></param>
         /// <param name="fromDate"></param>
         /// <param name="toDate"></param>
-        public Water(double priceForOne, double volumeLast,double volumeNow , DateTime fromDate, DateTime toDate)
+        public Water(string serviceName, double priceForOne, int volumeLast, int volumeNow , DateTime fromDate, DateTime toDate)
         {
             #region Проверка
-            if (priceForOne <= 0)
+            if(string.IsNullOrWhiteSpace(serviceName))
             {
-                throw new ArgumentException("Цена не может быть равна или меньше нуля", nameof(priceForOne));
+                throw new ArgumentNullException("Имя is null or empty", nameof(serviceName));
             }
-            if (volumeNow <= 0)
-            {
-                throw new ArgumentException("Объем не может быть равен или меньше нуля", nameof(volumeNow));
-            }
-            if (fromDate >= DateTime.Now || fromDate <= DateTime.Parse("2010.01.01") || fromDate >= toDate)
-            {
-                throw new ArgumentException("Некорректная дата", nameof(toDate));
-            }
-            if (toDate >= DateTime.Now || toDate <= DateTime.Parse("2010.01.01"))
-            {
-                throw new ArgumentException("Некорректная дата", nameof(toDate));
-            }
+            //if (priceForOne <= 0)
+            //{
+            //    throw new ArgumentException("Цена не может быть равна или меньше нуля", nameof(priceForOne));
+            //}
+            //if (volumeNow <= 0)
+            //{
+            //    throw new ArgumentException("Объем не может быть равен или меньше нуля", nameof(volumeNow));
+            //}
+
             #endregion
+            ServiceName = serviceName;
             Volume = volumeNow - volumeLast;
             CountDays = toDate - fromDate;
             PriceForOne = priceForOne;

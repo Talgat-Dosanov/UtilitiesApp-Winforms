@@ -55,6 +55,7 @@ namespace CommunalApp_Winforms
             // 
             // label1
             // 
+            this.label1.BackColor = System.Drawing.Color.AliceBlue;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label1.Location = new System.Drawing.Point(21, 123);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -88,14 +89,14 @@ namespace CommunalApp_Winforms
             this.maskWaterBox1.Name = "maskWaterBox1";
             this.maskWaterBox1.Size = new System.Drawing.Size(155, 26);
             this.maskWaterBox1.TabIndex = 4;
-            this.maskWaterBox1.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.maskWaterBox1_MaskInputRejected);
+            this.maskWaterBox1.ValidatingType = typeof(int);
             // 
             // maskWaterVolBox2
             // 
             this.maskWaterVolBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.maskWaterVolBox2.Location = new System.Drawing.Point(378, 218);
             this.maskWaterVolBox2.Margin = new System.Windows.Forms.Padding(4);
-            this.maskWaterVolBox2.Mask = "00000.000";
+            this.maskWaterVolBox2.Mask = "00000000";
             this.maskWaterVolBox2.Name = "maskWaterVolBox2";
             this.maskWaterVolBox2.Size = new System.Drawing.Size(155, 26);
             this.maskWaterVolBox2.TabIndex = 5;
@@ -148,10 +149,12 @@ namespace CommunalApp_Winforms
             this.comboBoxService.Name = "comboBoxService";
             this.comboBoxService.Size = new System.Drawing.Size(219, 24);
             this.comboBoxService.TabIndex = 11;
+            this.comboBoxService.SelectedIndexChanged += new System.EventHandler(this.comboBoxService_SelectedIndexChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.SkyBlue;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label5.Location = new System.Drawing.Point(16, 23);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -201,10 +204,11 @@ namespace CommunalApp_Winforms
             // 
             this.lastMonthBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lastMonthBox.Location = new System.Drawing.Point(378, 175);
-            this.lastMonthBox.Mask = "00000.000";
+            this.lastMonthBox.Mask = "00000000";
             this.lastMonthBox.Name = "lastMonthBox";
             this.lastMonthBox.Size = new System.Drawing.Size(155, 26);
             this.lastMonthBox.TabIndex = 17;
+            this.lastMonthBox.ValidatingType = typeof(int);
             // 
             // volumeError
             // 
@@ -216,7 +220,7 @@ namespace CommunalApp_Winforms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::CommunalApp_Winforms.Properties.Resources.les_derevia_doroga_205713_3840x2160;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(577, 447);
             this.Controls.Add(this.lastMonthBox);
@@ -234,9 +238,11 @@ namespace CommunalApp_Winforms
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
-            this.Text = "Калькулятор Коммунальных услуг";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = " ";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.errorService)).EndInit();

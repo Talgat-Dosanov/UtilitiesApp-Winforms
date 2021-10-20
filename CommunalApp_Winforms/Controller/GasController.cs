@@ -16,7 +16,7 @@ namespace CommunalApp_Winforms.Controller
         public void Add(Gas gas)
         {
             base.Add(GasList, gas);
-            base.Save(GasList);
+            Save();
         }
         public Gas GetGasInfo(DateTime fromDate, DateTime toDate)
         {
@@ -26,13 +26,23 @@ namespace CommunalApp_Winforms.Controller
         {
             return base.GetLastInfo();
         }
-        public void SetNewGasData(double price,
-                                    double volumeLast,
-                                    double volumeNow,
-                                    DateTime fromDate,
-                                    DateTime toDate)
+        public void DeleteLast()
         {
-            newGasData = new Gas(price, volumeLast, volumeNow, fromDate, toDate);
+            GasList.RemoveAt(GasList.Count - 1);
+            Save();
+        }
+        public void SetNewGasData(string serviceName,
+                                  double price,
+                                  int volumeLast,
+                                  int volumeNow,
+                                  DateTime fromDate,
+                                  DateTime toDate)
+        {
+            newGasData = new Gas(serviceName, price, volumeLast, volumeNow, fromDate, toDate);
+        }
+        public void Save()
+        {
+            base.Save(GasList);
         }
     }
 }

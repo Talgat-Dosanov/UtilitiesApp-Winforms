@@ -20,7 +20,6 @@ namespace CommunalApp_Winforms.Controller
         public void Add(Water water)
         {
             base.Add(WaterList, water);
-            base.Save(WaterList);
         }
         public Water GetWaterInfo(DateTime fromDate, DateTime toDate)
         {
@@ -30,13 +29,24 @@ namespace CommunalApp_Winforms.Controller
         {
             return base.GetLastInfo();
         }
-        public void SetNewWaterData(double price,
-                                    double volumeLast,
-                                    double volumeNow,
+        public void DeleteLast()
+        {
+            WaterList.RemoveAt(WaterList.Count - 1);
+            Save();
+        }
+
+        public void SetNewWaterData(string serviceName,
+                                    double price,
+                                    int volumeLast,
+                                    int volumeNow,
                                     DateTime fromDate,
                                     DateTime toDate)
         {
-            newWaterData = new Water(price, volumeLast, volumeNow, fromDate, toDate);
+            newWaterData = new Water(serviceName, price, volumeLast, volumeNow, fromDate, toDate);
+        }
+        public void Save()
+        {
+            base.Save(WaterList);
         }
     }
 }

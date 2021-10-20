@@ -7,7 +7,7 @@ namespace CommunalApp_Winforms.Controller
 {
     public class ElectricityController : ControllerBase<Electricity>
     {
-        public List<Electricity> ElectricityList { get; }
+        public List<Electricity> ElectricityList { get; private set; }
         public Electricity newElectricityData { get; private set; }
 
         
@@ -18,7 +18,8 @@ namespace CommunalApp_Winforms.Controller
         public void Add(Electricity electricity)
         {
             base.Add(ElectricityList, electricity);
-            base.Save(ElectricityList);
+            Save();
+            
         }
         public Electricity GetElectricityInfo(DateTime fromDate, DateTime toDate)
         {
@@ -28,14 +29,25 @@ namespace CommunalApp_Winforms.Controller
         {
             return base.GetLastInfo();
         }
-        public void SetNewElectricityData(double price,
-                                    double volumeLast,
-                                    double volumeNow,
-                                    DateTime fromDate,
-                                    DateTime toDate)
+        public void SetNewElectricityData(string serviceName,
+                                          double price,
+                                          int volumeLast,
+                                          int volumeNow,
+                                          DateTime fromDate,
+                                          DateTime toDate)
         {
-             newElectricityData = new Electricity(price, volumeLast, volumeNow, fromDate, toDate);
+             newElectricityData = new Electricity(serviceName, price, volumeLast, volumeNow, fromDate, toDate);
         }
+        public void DeleteLast()
+        {
+            ElectricityList.RemoveAt(ElectricityList.Count - 1);
+            Save();
+        }
+        public void Save()
+        {
+            base.Save(ElectricityList);
+        }
+        
 
     }
 }

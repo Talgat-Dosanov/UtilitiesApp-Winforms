@@ -1,6 +1,7 @@
 ﻿using CommunalApp_Winforms.Controller;
 using CommunalApp_Winforms.Model;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Windows.Forms;
@@ -9,32 +10,25 @@ namespace CommunalApp_Winforms
 {
     public partial class Form1 : Form
     {
-        public static double Price { get; private set; }
-        public static double Volume { get; private set; }
-        public static DateTime BeginDate { get; private set; }
-        public static DateTime FinishDate { get; private set; }
-        public static double PriceForService { get; private set; }
 
-        public static WaterController waterController { get; private set; }
-        public static ElectricityController electricityController { get; private set; }
-        public static GasController gasController { get; private set; }
-        public static string pointerService { get; private set; }
+        public static WaterController WaterController { get; private set; }
+        public static ElectricityController ElectricityController { get; private set; }
+        public static GasController GasController { get; private set; }
 
-        
+        public static int GetSelectIndex { get; private set; }
 
-        delegate T ControllerManager<T>() where T : class;
+
         public Form1()
         {
             InitializeComponent();
-            
+
             maskWaterBox1.Validating += maskWaterBox1_TextChanged;
             maskWaterVolBox2.Validating += maskWaterVolBox2_TextChanged;
             dateTimePickerStart1.Validating += dateTimePickerStart1_TextChanged;
             dateTimePickerEnd2.Validating += dateTimePickerEnd2_TextChanged;
             lastMonthBox.Validating += lastMonthBox_TextChanged;
-            //table
 
-           
+
 
             // ComboBox settings
             comboBoxService.DropDownStyle = ComboBoxStyle.DropDown;
@@ -42,13 +36,13 @@ namespace CommunalApp_Winforms
                                                           "Расчет электроэнергии",
                                                           "Расчет газоснабжения"});
             comboBoxService.SelectedItem = comboBoxService.Items[1];
-            
-            
+
+
         }
 
         private void lastMonthBox_TextChanged(object sender, CancelEventArgs e)
         {
-            if(maskWaterBox1.MaskFull && maskWaterVolBox2.MaskFull && lastMonthBox.MaskFull)
+            if (maskWaterBox1.MaskFull && maskWaterVolBox2.MaskFull && lastMonthBox.MaskFull)
             {
                 calcButton.Enabled = true;
             }
@@ -56,7 +50,7 @@ namespace CommunalApp_Winforms
             {
                 calcButton.Enabled = false;
             }
-            if(!lastMonthBox.MaskCompleted)
+            if (!lastMonthBox.MaskCompleted)
             {
                 volumeError.SetError(lastMonthBox, "Значение не может быть пустым");
             }
@@ -64,35 +58,40 @@ namespace CommunalApp_Winforms
             else
             {
                 volumeError.Clear();
-                
+                calcButton.Enabled = true;
+
             }
-                
+
         }
 
 
         private void dateTimePickerEnd2_TextChanged(object sender, CancelEventArgs e)
         {
-          
+
             if (dateTimePickerEnd2.Value <= dateTimePickerStart1.Value)
             {
                 errorDate.SetError(dateTimePickerEnd2, "Некорректная дата");
+
             }
             else
             {
                 errorDate.Clear();
-               
+
+
             }
         }
 
         private void dateTimePickerStart1_TextChanged(object sender, CancelEventArgs e)
         {
-            if(dateTimePickerStart1.Value >= dateTimePickerEnd2.Value)
-                {
-                    errorDate.SetError(dateTimePickerStart1, "Некорректная дата");
-                }
+            if (dateTimePickerStart1.Value >= dateTimePickerEnd2.Value)
+            {
+                errorDate.SetError(dateTimePickerStart1, "Некорректная дата");
+
+            }
             else
             {
                 errorDate.Clear();
+
             }
         }
 
@@ -138,180 +137,254 @@ namespace CommunalApp_Winforms
             }
         }
 
-        private void maskWaterBox1_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
-        {
-            
-            if(comboBoxService.SelectedIndex == 0)
-            {
-                var tableForm = new LoadTableForm();
-                
-            }
-        }
-    
+
         private void calcButton_Click(object sender, EventArgs e)
         {
-            waterController = new WaterController();
-            electricityController = new ElectricityController();
-            gasController = new GasController();
-            
+            var waterController = new WaterController();
+            var electricityController = new ElectricityController();
+            var gasController = new GasController();
+
             var price = Convert.ToDouble(maskWaterBox1.Text);
-            
-            double volumeLast;
-            var volumeNow = Convert.ToDouble(maskWaterVolBox2.Text);
-            var beginDate = dateTimePickerStart1.Value;
+
+            var volumeNow = Convert.ToInt32(maskWaterVolBox2.Text);
+            var volumeLast = Convert.ToInt32(lastMonthBox.Text);
+            string serviceName;
+            var beginDate  = dateTimePickerStart1.Value;
             var finishDate = dateTimePickerEnd2.Value;
 
+
+
+            if (lastMonthBox.MaskFull == false)
+            {
+                MessageBox.Show("Значение прошлого показания счетчика не можеть быть пустым");
+                return;
+            }
+            if (maskWaterVolBox2.MaskFull == false)
+            {
+                MessageBox.Show("Значение текущего показания счетчика не можеть быть пустым");
+                return;
+            }
             
+            
+
 
             switch (comboBoxService.SelectedIndex)
             {
                 case 0:
-                    
-                    if (waterController.GetWaterLastInfo() == null)
-                    {
-                        volumeLast = Convert.ToDouble(lastMonthBox.Text);
-
-                    }
-                    else
-                    {
-                        volumeLast = Convert.ToDouble(waterController.GetLastInfo());
-                        lastMonthBox.RejectInputOnFirstFailure = true;
-                    }
-                    waterController.SetNewWaterData(price,
+                    serviceName = "Вода";
+                   
+                    waterController.SetNewWaterData(serviceName,
+                                                    price,
                                                     volumeLast,
                                                     volumeNow,
                                                     beginDate,
                                                     finishDate);
-                    Price = price;
-                    Volume = waterController.newWaterData.Volume;
-                    BeginDate = beginDate;
-                    FinishDate = finishDate;
-                    PriceForService = waterController.newWaterData.ResultPrice;
 
-                    CheckVolume(Volume);
-                    CheckDate(BeginDate, FinishDate);
-                    pointerService = "water";
+                    WaterController = waterController;
+
+                    if (CheckDate(beginDate, finishDate) == false)
+                    {
+                        MessageBox.Show("Некорректная дата");
+                        return;
+                    }
+
                     break;
                 case 1:
-                    if (electricityController.GetElectricityLastInfo() == null)
+                    serviceName = "Электричество";
+                    if (electricityController.ElectricityList.Count != 0)
                     {
-                        volumeLast = Convert.ToDouble(lastMonthBox.Text);
-
+                        beginDate = electricityController.GetLastInfo().FromDate;
                     }
                     else
                     {
-                        volumeLast = Convert.ToDouble(electricityController.GetLastInfo());
-                        lastMonthBox.RejectInputOnFirstFailure = true;
+                        beginDate = dateTimePickerStart1.Value;
                     }
-                    electricityController.SetNewElectricityData(price,
+                    electricityController.SetNewElectricityData(serviceName,
+                                                                price,
                                                                 volumeLast,
                                                                 volumeNow,
                                                                 beginDate,
                                                                 finishDate);
-                    electricityController.SetNewElectricityData(price,
-                                                                volumeLast,
-                                                                volumeNow,
-                                                                beginDate,
-                                                                finishDate);
-                    Price = price;
-                    Volume = electricityController.newElectricityData.Volume;
-                    BeginDate = beginDate;
-                    FinishDate = finishDate;
-                    PriceForService = electricityController.newElectricityData.ResultPrice;
-                    CheckVolume(Volume);
-                    CheckDate(BeginDate, FinishDate);
-                    pointerService = "electricity";
+
+
+                    ElectricityController = electricityController;
+
+                    if (CheckDate(beginDate, finishDate) == false)
+                    {
+                        MessageBox.Show("Некорректная дата");
+                        return;
+                    }
+
                     break;
 
                 case 2:
-                    if (gasController.GetGasLastInfo() == null)
+                    if (gasController.GasList.Count != 0)
                     {
-                        volumeLast = Convert.ToDouble(lastMonthBox.Text);
-
+                        beginDate = gasController.GetLastInfo().FromDate;
                     }
                     else
                     {
-                        volumeLast = Convert.ToDouble(gasController.GetLastInfo());
-                        lastMonthBox.RejectInputOnFirstFailure = true;
+                        beginDate = dateTimePickerStart1.Value;
                     }
-                    gasController.SetNewGasData(price,
+                    serviceName = "Газ";
+                    gasController.SetNewGasData(serviceName,
+                                                price,
                                                 volumeLast,
                                                 volumeNow,
                                                 beginDate,
                                                 finishDate);
-                    Price = price;
-                    Volume = gasController.newGasData.Volume;
-                    BeginDate = beginDate;
-                    FinishDate = finishDate;
-                    PriceForService = gasController.newGasData.ResultPrice;
-                    CheckVolume(Volume);
-                    CheckDate(BeginDate, FinishDate);
-                    pointerService = "gas";
+
+                    GasController = gasController;
+                    if (CheckDate(beginDate, finishDate) == false)
+                    {
+                        MessageBox.Show("Некорректная дата");
+                        return;
+                    }
+
                     break;
 
-            }            
-            
-        }
-        
-        public static void CheckVolume(double volume)
-        {
-            if(volume <= 0)
-            {
-                MessageBox.Show("Показания счетчика на текущий момент не может быть меньше показания прошлого");
+
             }
-            else
+            if (CheckEnter(volumeLast, volumeNow) == false)
             {
-                ResForm resultForm = new ResForm();
-                resultForm.Show();
+                MessageBox.Show("Текущее показание не может быть равно нулю или меньше показания прошлого месяца");
+                return;
             }
-           
+            ShowReForm();
+         
         }
-           
-        public static void CheckDate(DateTime beginDate, DateTime finishDate)
+
+
+        public void ShowReForm()
         {
-            if(beginDate >= finishDate)
-            {
-                MessageBox.Show("Некорректная дата");
-                
-            }
-            
+            ResForm resForm = new ResForm();
+            resForm.Show();
         }
-        public static bool CheckEnter(string data)
+
+        public static bool CheckDate(DateTime beginDate, DateTime finishDate)
         {
-            if(string.IsNullOrEmpty(data))
+            if (beginDate >= finishDate || finishDate > DateTime.Now)
             {
-                MessageBox.Show($"Поля не могут быть пустыми");
                 return false;
             }
-            else
-            {
-                return true;
-            }
+            return true;
+
         }
+        public static bool CheckEnter(int lastValue, int newValue)
+        {
+            if(newValue < lastValue || newValue == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
 
         private void Form1_Load(object sender, EventArgs e)
         {
             calcButton.Enabled = false;
+            lastMonthBox.ReadOnly = false;
+
         }
 
         private void loadButton_Click(object sender, EventArgs e)
         {
             LoadTableForm loadInfo = new LoadTableForm();
+
             switch (comboBoxService.SelectedIndex)
             {
                 case 0:
-                    pointerService = "water";
+                    var water = new WaterController();
+
+                    if (water.WaterList.Count == 0)
+                    {
+                        MessageBox.Show("Не найдено данных");
+                        return;
+                    }
                     loadInfo.Show();
                     break;
                 case 1:
-                    pointerService = "electricity";
+                    var electricity = new ElectricityController();
+                    if (electricity.ElectricityList.Count == 0)
+                    {
+                        MessageBox.Show("Не найдено данных");
+                        return;
+
+                    }
                     loadInfo.Show();
                     break;
                 case 2:
-                    pointerService = "gas";
+                    var gas = new GasController();
+                    if (gas.GasList.Count == 0)
+                    {
+                        MessageBox.Show("Не найдено данных");
+                        return;
+                    }
                     loadInfo.Show();
                     break;
             }
         }
-    }   
+        public string GetMaskValue(string volume)
+        {
+            var mask = "00000000";
+            var text = mask.Substring(0, (mask.Length - volume.Length)) + volume;
+            return text;
+        }
+
+        private void comboBoxService_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GetSelectIndex = comboBoxService.SelectedIndex;
+            if (comboBoxService.SelectedIndex == 0)
+            {
+                var waterController = new WaterController();
+                if (waterController.WaterList.Count != 0)
+                {
+                    dateTimePickerStart1.Value = waterController.GetLastInfo().FromDate;
+                    var volume = Convert.ToString(waterController.GetLastInfo().Volume);
+                    lastMonthBox.Text = GetMaskValue(volume);
+                    lastMonthBox.ReadOnly = true;
+                }
+                else
+                {
+                    lastMonthBox.ReadOnly = false;
+                    lastMonthBox.Clear();
+                }
+
+            }
+            else if (comboBoxService.SelectedIndex == 1)
+            {
+                var electricityController = new ElectricityController();
+                if (electricityController.ElectricityList.Count != 0)
+                {
+                    dateTimePickerStart1.Value = electricityController.GetLastInfo().FromDate;
+                    var volume = Convert.ToString(electricityController.GetLastInfo().Volume);
+                    lastMonthBox.Text = GetMaskValue(volume);
+                    lastMonthBox.ReadOnly = true;
+                }
+                else
+                {
+                    lastMonthBox.ReadOnly = false;
+                    lastMonthBox.Clear();
+                }
+
+            }
+            else if (comboBoxService.SelectedIndex == 2)
+            {
+                var gasController = new GasController();
+                if (gasController.GasList.Count != 0)
+                {
+                    dateTimePickerStart1.Value = gasController.GetLastInfo().FromDate;
+                    var volume = Convert.ToString(gasController.GetLastInfo().Volume);
+                    lastMonthBox.Text = GetMaskValue(volume);
+                    lastMonthBox.ReadOnly = true;
+                }
+                else
+                {
+                    lastMonthBox.ReadOnly = false;
+                    lastMonthBox.Clear();
+                }
+
+            }
+        }
+    }
 }
