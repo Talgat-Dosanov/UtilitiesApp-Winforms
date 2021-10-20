@@ -327,10 +327,31 @@ namespace CommunalApp_Winforms
         public string GetMaskValue(string volume)
         {
             var mask = "00000000";
-            var text = mask.Substring(0, (mask.Length - volume.Length)) + volume;
+            string text;
+            if (mask.Length > volume.Length - 1)
+            {
+                text = mask.Substring(0, (mask.Length - (volume.Length - 1))) + volume;
+            }
+            else
+            {
+                text = volume;
+            }
             return text;
         }
-
+        public string GetMaskPrice(string price)
+        {
+            var mask = "0000";
+            string text;
+            if (mask.Length > price.Length - 1)
+            {
+                text = mask.Substring(0, (mask.Length - (price.Length - 1))) + price;
+            }
+            else
+            {
+                text = price;
+            }
+            return text;
+        }
         private void comboBoxService_SelectedIndexChanged(object sender, EventArgs e)
         {
             GetSelectIndex = comboBoxService.SelectedIndex;
@@ -339,14 +360,14 @@ namespace CommunalApp_Winforms
                 var waterController = new WaterController();
                 if (waterController.WaterList.Count != 0)
                 {
+                    var price = Convert.ToString(waterController.GetLastInfo().PriceForOne);
+                    maskWaterBox1.Text = GetMaskPrice(price);
                     dateTimePickerStart1.Value = waterController.GetLastInfo().FromDate;
-                    var volume = Convert.ToString(waterController.GetLastInfo().Volume);
+                    var volume = Convert.ToString(waterController.GetLastInfo().VolumeNow);
                     lastMonthBox.Text = GetMaskValue(volume);
-                    lastMonthBox.ReadOnly = true;
                 }
                 else
                 {
-                    lastMonthBox.ReadOnly = false;
                     lastMonthBox.Clear();
                 }
 
@@ -356,14 +377,14 @@ namespace CommunalApp_Winforms
                 var electricityController = new ElectricityController();
                 if (electricityController.ElectricityList.Count != 0)
                 {
+                    var price = Convert.ToString(electricityController.GetLastInfo().PriceForOne);
+                    maskWaterBox1.Text = GetMaskPrice(price);
                     dateTimePickerStart1.Value = electricityController.GetLastInfo().FromDate;
-                    var volume = Convert.ToString(electricityController.GetLastInfo().Volume);
+                    var volume = Convert.ToString(electricityController.GetLastInfo().VolumeNow);
                     lastMonthBox.Text = GetMaskValue(volume);
-                    lastMonthBox.ReadOnly = true;
                 }
                 else
                 {
-                    lastMonthBox.ReadOnly = false;
                     lastMonthBox.Clear();
                 }
 
@@ -373,14 +394,14 @@ namespace CommunalApp_Winforms
                 var gasController = new GasController();
                 if (gasController.GasList.Count != 0)
                 {
+                    var price = Convert.ToString(gasController.GetLastInfo().PriceForOne);
+                    maskWaterBox1.Text = GetMaskPrice(price);
                     dateTimePickerStart1.Value = gasController.GetLastInfo().FromDate;
-                    var volume = Convert.ToString(gasController.GetLastInfo().Volume);
+                    var volume = Convert.ToString(gasController.GetLastInfo().VolumeNow);
                     lastMonthBox.Text = GetMaskValue(volume);
-                    lastMonthBox.ReadOnly = true;
                 }
                 else
                 {
-                    lastMonthBox.ReadOnly = false;
                     lastMonthBox.Clear();
                 }
 

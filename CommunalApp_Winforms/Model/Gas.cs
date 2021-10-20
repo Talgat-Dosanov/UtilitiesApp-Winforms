@@ -20,6 +20,10 @@ namespace CommunalApp_Winforms.Model
         /// </summary>
         public int Volume { get; set; }
         /// <summary>
+        /// Текущее показание счетчика
+        /// </summary>
+        public int VolumeNow { get; set; }
+        /// <summary>
         /// Дата начала отсчета
         /// </summary>
         public DateTime FromDate { get; set; }
@@ -57,6 +61,7 @@ namespace CommunalApp_Winforms.Model
             #endregion
             ServiceName = serviceName;
             Volume = volumeNow - volumeLast;
+            VolumeNow = volumeNow;
             CountDays = toDate - fromDate;
             PriceForOne = priceForOne;
             ResultPrice = priceForOne * Volume;

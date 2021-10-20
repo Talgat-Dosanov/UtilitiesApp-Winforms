@@ -85,7 +85,7 @@ namespace CommunalApp_Winforms
             this.maskWaterBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.maskWaterBox1.Location = new System.Drawing.Point(378, 123);
             this.maskWaterBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.maskWaterBox1.Mask = "0.00";
+            this.maskWaterBox1.Mask = "00.00";
             this.maskWaterBox1.Name = "maskWaterBox1";
             this.maskWaterBox1.Size = new System.Drawing.Size(155, 26);
             this.maskWaterBox1.TabIndex = 4;
