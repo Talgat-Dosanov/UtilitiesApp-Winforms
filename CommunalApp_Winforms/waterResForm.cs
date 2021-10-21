@@ -78,8 +78,12 @@ namespace CommunalApp_Winforms
                 "Сохранение",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Asterisk);
+            if(result == DialogResult.OK)
+            {
+                this.Close();
+            }
         }
-       
+
 
     }
     

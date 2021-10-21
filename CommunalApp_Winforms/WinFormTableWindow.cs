@@ -94,6 +94,15 @@ namespace CommunalApp_Winforms
                "Удаление",
                MessageBoxButtons.OK,
                MessageBoxIcon.Asterisk);
+
+            if (result == DialogResult.OK)
+            {
+                this.Close();
+                LoadTableForm newForm = new LoadTableForm();
+                newForm.Show();
+            }
+
         }
+
     }
 }
