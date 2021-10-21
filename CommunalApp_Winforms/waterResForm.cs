@@ -18,7 +18,7 @@ namespace CommunalApp_Winforms
             table.Columns.Add("По");
             table.Columns.Add("Итоговая цена в руб.");
             DataRow r = table.NewRow();
-            switch(Form1.GetSelectIndex)
+            switch (Form1.GetSelectIndex)
             {
                 case 0:
                     r["Название"] = Form1.WaterController.newWaterData.ServiceName;
@@ -46,14 +46,14 @@ namespace CommunalApp_Winforms
                     break;
 
             }
-            
-           
+
+
             table.Rows.Add(r);
             dataGridForm2.DataSource = table;
-            dataGridForm2.ReadOnly = true; 
+            dataGridForm2.ReadOnly = true;
 
         }
-         
+
         private void saveResults_Click(object sender, EventArgs e)
         {
             switch (Form1.GetSelectIndex)
@@ -73,7 +73,14 @@ namespace CommunalApp_Winforms
                     break;
             }
 
-
+            DialogResult result = MessageBox.Show(
+                "Данные успешно сохранены!",
+                "Сохранение",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Asterisk);
         }
+       
+
     }
+    
 }

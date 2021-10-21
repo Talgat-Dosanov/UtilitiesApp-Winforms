@@ -88,6 +88,12 @@ namespace CommunalApp_Winforms
                     gas.DeleteLast();
                     break;
             }
+
+            DialogResult result = MessageBox.Show(
+               "Данные успешно удалены!",
+               "Удаление",
+               MessageBoxButtons.OK,
+               MessageBoxIcon.Asterisk);
         }
     }
 }

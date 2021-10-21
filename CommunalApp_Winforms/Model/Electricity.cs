@@ -45,18 +45,23 @@ namespace CommunalApp_Winforms.Model
         public Electricity(string serviceName, double priceForOne, int volumeLast, int volumeNow,  DateTime fromDate, DateTime toDate)
         {
             #region Проверка
-            //if (string.IsNullOrWhiteSpace(serviceName))
-            //{
-            //    throw new ArgumentNullException("Имя is null or empty", nameof(serviceName));
-            //}
-            //if (priceForOne <= 0)
-            //{
-            //    throw new ArgumentException("Цена не может быть равна или меньше нуля", nameof(priceForOne));
-            //}
-            //if (volumeNow <= 0)
-            //{
-            //    throw new ArgumentException("Количество электроэнергии не может быть равен или меньше нуля", nameof(volumeNow));
-            //}
+            if (string.IsNullOrWhiteSpace(serviceName))
+            {
+                throw new ArgumentNullException("Имя is null or empty", nameof(serviceName));
+            }
+            if (priceForOne <= 0)
+            {
+                throw new ArgumentException("Цена не может быть равна или меньше нуля", nameof(priceForOne));
+            }
+            
+            if(volumeLast >= volumeNow || volumeNow <= 0)
+            {
+                throw new ArgumentException("Текущие показания счетчика не могут быть равны нулю или быть меньше предыдущих", nameof(volumeNow));
+            }
+            if(fromDate >= toDate || toDate > DateTime.Now)
+            {
+                throw new ArgumentException("Некорректная дата", nameof(fromDate));
+            }
 
             #endregion
             ServiceName = serviceName;

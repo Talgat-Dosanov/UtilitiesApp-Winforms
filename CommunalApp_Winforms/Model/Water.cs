@@ -49,14 +49,19 @@ namespace CommunalApp_Winforms.Model
             {
                 throw new ArgumentNullException("Имя is null or empty", nameof(serviceName));
             }
-            //if (priceForOne <= 0)
-            //{
-            //    throw new ArgumentException("Цена не может быть равна или меньше нуля", nameof(priceForOne));
-            //}
-            //if (volumeNow <= 0)
-            //{
-            //    throw new ArgumentException("Объем не может быть равен или меньше нуля", nameof(volumeNow));
-            //}
+            if (priceForOne <= 0)
+            {
+                throw new ArgumentException("Цена не может быть равна или меньше нуля", nameof(priceForOne));
+            }
+            if (volumeLast >= volumeNow || volumeNow <= 0)
+            {
+                throw new ArgumentException("Текущие показания счетчика не могут быть равны нулю или быть меньше предыдущих", nameof(volumeNow));
+            }
+            if (fromDate >= toDate || toDate > DateTime.Now)
+            {
+                throw new ArgumentException("Некорректная дата", nameof(fromDate));
+            }
+            
 
             #endregion
             ServiceName = serviceName;

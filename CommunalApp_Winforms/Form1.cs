@@ -149,8 +149,8 @@ namespace CommunalApp_Winforms
             var volumeNow = Convert.ToInt32(maskWaterVolBox2.Text);
             var volumeLast = Convert.ToInt32(lastMonthBox.Text);
             string serviceName;
-            var beginDate  = dateTimePickerStart1.Value;
-            var finishDate = dateTimePickerEnd2.Value;
+            var beginDate  = dateTimePickerStart1.Value.Date;
+            var finishDate = dateTimePickerEnd2.Value.Date;
 
 
 
@@ -171,84 +171,99 @@ namespace CommunalApp_Winforms
             switch (comboBoxService.SelectedIndex)
             {
                 case 0:
-                    serviceName = "Вода";
-                   
-                    waterController.SetNewWaterData(serviceName,
+                    try
+                    {
+                        serviceName = "Вода";
+
+                        waterController.SetNewWaterData(serviceName,
+                                                        price,
+                                                        volumeLast,
+                                                        volumeNow,
+                                                        beginDate,
+                                                        finishDate);
+
+                        WaterController = waterController;
+                    }
+                    catch (ArgumentException ex) when (ex.ParamName == "volumeNow")
+                    {
+                        MessageBox.Show("Некорректный ввод текущего показания счетчика");
+                        return;
+                    }
+                    catch(ArgumentException ex) when (ex.ParamName == "priceForOne")
+                    {
+                        MessageBox.Show("Цена за единицу измерения не может быть меньше или равно нулю");
+                        return;
+                    }
+                    catch(ArgumentException ex) when (ex.ParamName == "fromDate")
+                    {
+                        MessageBox.Show("Некорректная дата");
+                        return;
+                    }
+                    break;
+                case 1:
+                    try
+                    {
+                        serviceName = "Электричество";
+
+                        electricityController.SetNewElectricityData(serviceName,
+                                                                    price,
+                                                                    volumeLast,
+                                                                    volumeNow,
+                                                                    beginDate,
+                                                                    finishDate);
+
+
+                        ElectricityController = electricityController;
+                    }
+                    catch (ArgumentException ex) when (ex.ParamName == "volumeNow")
+                    {
+                        MessageBox.Show("Некорректный ввод текущего показания счетчика");
+                        return;
+                    }
+                    catch (ArgumentException ex) when (ex.ParamName == "priceForOne")
+                    {
+                        MessageBox.Show("Цена за единицу измерения не может быть меньше или равно нулю");
+                        return;
+                    }
+                    catch (ArgumentException ex) when (ex.ParamName == "fromDate")
+                    {
+                        MessageBox.Show("Некорректная дата");
+                        return;
+                    }
+                    break;
+
+                case 2:
+                    try
+                    {
+
+                        serviceName = "Газ";
+                        gasController.SetNewGasData(serviceName,
                                                     price,
                                                     volumeLast,
                                                     volumeNow,
                                                     beginDate,
                                                     finishDate);
 
-                    WaterController = waterController;
-
-                    if (CheckDate(beginDate, finishDate) == false)
+                        GasController = gasController;
+                    }
+                    catch (ArgumentException ex) when (ex.ParamName == "volumeNow")
+                    {
+                        MessageBox.Show("Некорректный ввод текущего показания счетчика");
+                        return;
+                    }
+                    catch (ArgumentException ex) when (ex.ParamName == "priceForOne")
+                    {
+                        MessageBox.Show("Цена за единицу измерения не может быть меньше или равно нулю");
+                        return;
+                    }
+                    catch (ArgumentException ex) when (ex.ParamName == "fromDate")
                     {
                         MessageBox.Show("Некорректная дата");
                         return;
                     }
-
-                    break;
-                case 1:
-                    serviceName = "Электричество";
-                    if (electricityController.ElectricityList.Count != 0)
-                    {
-                        beginDate = electricityController.GetLastInfo().FromDate;
-                    }
-                    else
-                    {
-                        beginDate = dateTimePickerStart1.Value;
-                    }
-                    electricityController.SetNewElectricityData(serviceName,
-                                                                price,
-                                                                volumeLast,
-                                                                volumeNow,
-                                                                beginDate,
-                                                                finishDate);
-
-
-                    ElectricityController = electricityController;
-
-                    if (CheckDate(beginDate, finishDate) == false)
-                    {
-                        MessageBox.Show("Некорректная дата");
-                        return;
-                    }
-
-                    break;
-
-                case 2:
-                    if (gasController.GasList.Count != 0)
-                    {
-                        beginDate = gasController.GetLastInfo().FromDate;
-                    }
-                    else
-                    {
-                        beginDate = dateTimePickerStart1.Value;
-                    }
-                    serviceName = "Газ";
-                    gasController.SetNewGasData(serviceName,
-                                                price,
-                                                volumeLast,
-                                                volumeNow,
-                                                beginDate,
-                                                finishDate);
-
-                    GasController = gasController;
-                    if (CheckDate(beginDate, finishDate) == false)
-                    {
-                        MessageBox.Show("Некорректная дата");
-                        return;
-                    }
-
                     break;
 
 
-            }
-            if (CheckEnter(volumeLast, volumeNow) == false)
-            {
-                MessageBox.Show("Текущее показание не может быть равно нулю или меньше показания прошлого месяца");
-                return;
             }
             ShowReForm();
          
@@ -260,25 +275,6 @@ namespace CommunalApp_Winforms
             ResForm resForm = new ResForm();
             resForm.Show();
         }
-
-        public static bool CheckDate(DateTime beginDate, DateTime finishDate)
-        {
-            if (beginDate >= finishDate || finishDate > DateTime.Now)
-            {
-                return false;
-            }
-            return true;
-
-        }
-        public static bool CheckEnter(int lastValue, int newValue)
-        {
-            if(newValue < lastValue || newValue == 0)
-            {
-                return false;
-            }
-            return true;
-        }
-
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -328,9 +324,9 @@ namespace CommunalApp_Winforms
         {
             var mask = "00000000";
             string text;
-            if (mask.Length > volume.Length - 1)
+            if (mask.Length > volume.Length)
             {
-                text = mask.Substring(0, (mask.Length - (volume.Length - 1))) + volume;
+                text = mask.Substring(0, (mask.Length - (volume.Length))) + volume;
             }
             else
             {
@@ -362,14 +358,16 @@ namespace CommunalApp_Winforms
                 {
                     var price = Convert.ToString(waterController.GetLastInfo().PriceForOne);
                     maskWaterBox1.Text = GetMaskPrice(price);
-                    dateTimePickerStart1.Value = waterController.GetLastInfo().FromDate;
+                    dateTimePickerStart1.Value = waterController.GetLastInfo().ToDate.Date;
                     var volume = Convert.ToString(waterController.GetLastInfo().VolumeNow);
                     lastMonthBox.Text = GetMaskValue(volume);
+                    WaterController = waterController;
                 }
                 else
                 {
                     lastMonthBox.Clear();
                 }
+                
 
             }
             else if (comboBoxService.SelectedIndex == 1)
@@ -379,9 +377,10 @@ namespace CommunalApp_Winforms
                 {
                     var price = Convert.ToString(electricityController.GetLastInfo().PriceForOne);
                     maskWaterBox1.Text = GetMaskPrice(price);
-                    dateTimePickerStart1.Value = electricityController.GetLastInfo().FromDate;
+                    dateTimePickerStart1.Value = electricityController.GetLastInfo().ToDate.Date;
                     var volume = Convert.ToString(electricityController.GetLastInfo().VolumeNow);
                     lastMonthBox.Text = GetMaskValue(volume);
+                    ElectricityController = electricityController;
                 }
                 else
                 {
@@ -396,9 +395,10 @@ namespace CommunalApp_Winforms
                 {
                     var price = Convert.ToString(gasController.GetLastInfo().PriceForOne);
                     maskWaterBox1.Text = GetMaskPrice(price);
-                    dateTimePickerStart1.Value = gasController.GetLastInfo().FromDate;
+                    dateTimePickerStart1.Value = gasController.GetLastInfo().ToDate;
                     var volume = Convert.ToString(gasController.GetLastInfo().VolumeNow);
                     lastMonthBox.Text = GetMaskValue(volume);
+                    GasController = gasController;
                 }
                 else
                 {
