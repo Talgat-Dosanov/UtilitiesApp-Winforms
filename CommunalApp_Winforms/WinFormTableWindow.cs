@@ -16,6 +16,7 @@ namespace CommunalApp_Winforms
             table.Columns.Add("Показания счетчика за указанный период");
             table.Columns.Add("C");
             table.Columns.Add("По");
+            table.Columns.Add("Разница показаний за указанный период");
             table.Columns.Add("Итоговая цена в руб.");
             dataGridView1.DataSource = table;
             dataGridView1.ReadOnly = true;
@@ -31,9 +32,10 @@ namespace CommunalApp_Winforms
                         DataRow r = table.NewRow();
                         r["Название"] = item.ServiceName;
                         r["Цена"] = item.PriceForOne;
-                        r["Показания счетчика за указанный период"] = item.Volume;
+                        r["Показания счетчика за указанный период"] = Form1.GetMaskValue(Convert.ToString(item.VolumeNow));
                         r["C"] = item.FromDate;
                         r["По"] = item.ToDate;
+                        r["Разница показаний за указанный период"] = item.Volume;
                         r["Итоговая цена в руб."] = Math.Round(item.ResultPrice, 2);
                         table.Rows.Add(r);
                     }
@@ -45,9 +47,10 @@ namespace CommunalApp_Winforms
                         DataRow r = table.NewRow();
                         r["Название"] = item.ServiceName;
                         r["Цена"] = item.PriceForOne;
-                        r["Показания счетчика за указанный период"] = item.Volume;
+                        r["Показания счетчика за указанный период"] = Form1.GetMaskValue(Convert.ToString(item.VolumeNow));
                         r["C"] = item.FromDate;
                         r["По"] = item.ToDate;
+                        r["Разница показаний за указанный период"] = item.Volume;
                         r["Итоговая цена в руб."] = Math.Round(item.ResultPrice, 2);
                         table.Rows.Add(r);
                     }
@@ -59,9 +62,10 @@ namespace CommunalApp_Winforms
                         DataRow r = table.NewRow();
                         r["Название"] = item.ServiceName;
                         r["Цена"] = item.PriceForOne;
-                        r["Показания счетчика за указанный период"] = item.Volume;
+                        r["Показания счетчика за указанный период"] = Form1.GetMaskValue(Convert.ToString(item.VolumeNow));
                         r["C"] = item.FromDate;
                         r["По"] = item.ToDate;
+                        r["Разница показаний за указанный период"] = item.Volume;
                         r["Итоговая цена в руб."] = Math.Round(item.ResultPrice, 2);
                         table.Rows.Add(r);
                     }

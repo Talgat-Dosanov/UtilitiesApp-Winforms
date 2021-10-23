@@ -320,7 +320,7 @@ namespace CommunalApp_Winforms
                     break;
             }
         }
-        public string GetMaskValue(string volume)
+        public static string GetMaskValue(string volume)
         {
             var mask = "00000000";
             string text;

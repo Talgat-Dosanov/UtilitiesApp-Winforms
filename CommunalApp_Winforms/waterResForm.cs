@@ -16,6 +16,7 @@ namespace CommunalApp_Winforms
             table.Columns.Add("Показания счетчика за указанный период");
             table.Columns.Add("C");
             table.Columns.Add("По");
+            table.Columns.Add("Разница показаний за указанный период");
             table.Columns.Add("Итоговая цена в руб.");
             DataRow r = table.NewRow();
             switch (Form1.GetSelectIndex)
@@ -23,25 +24,28 @@ namespace CommunalApp_Winforms
                 case 0:
                     r["Название"] = Form1.WaterController.newWaterData.ServiceName;
                     r["Цена"] = Form1.WaterController.newWaterData.PriceForOne;
-                    r["Показания счетчика за указанный период"] = Form1.WaterController.newWaterData.Volume;
+                    r["Показания счетчика за указанный период"] = Form1.GetMaskValue(Convert.ToString(Form1.WaterController.newWaterData.VolumeNow));
                     r["C"] = Form1.WaterController.newWaterData.FromDate;
                     r["По"] = Form1.WaterController.newWaterData.ToDate;
+                    r["Разница показаний за указанный период"] = Form1.WaterController.newWaterData.Volume;
                     r["Итоговая цена в руб."] = Math.Round(Form1.WaterController.newWaterData.ResultPrice, 2);
                     break;
                 case 1:
                     r["Название"] = Form1.ElectricityController.newElectricityData.ServiceName;
                     r["Цена"] = Form1.ElectricityController.newElectricityData.PriceForOne;
-                    r["Показания счетчика за указанный период"] = Form1.ElectricityController.newElectricityData.Volume;
+                    r["Показания счетчика за указанный период"] = Form1.GetMaskValue(Convert.ToString(Form1.ElectricityController.newElectricityData.VolumeNow));
                     r["C"] = Form1.ElectricityController.newElectricityData.FromDate;
                     r["По"] = Form1.ElectricityController.newElectricityData.ToDate;
+                    r["Разница показаний за указанный период"] = Form1.ElectricityController.newElectricityData.Volume;
                     r["Итоговая цена в руб."] = Math.Round(Form1.ElectricityController.newElectricityData.ResultPrice, 2);
                     break;
                 case 2:
                     r["Название"] = Form1.GasController.newGasData.ServiceName;
                     r["Цена"] = Form1.GasController.newGasData.PriceForOne;
-                    r["Показания счетчика за указанный период"] = Form1.GasController.newGasData.Volume;
+                    r["Показания счетчика за указанный период"] = Form1.GetMaskValue(Convert.ToString(Form1.GasController.newGasData.VolumeNow)); ;
                     r["C"] = Form1.GasController.newGasData.FromDate;
                     r["По"] = Form1.GasController.newGasData.ToDate;
+                    r["Разница показаний за указанный период"] = Form1.GasController.newGasData.Volume;
                     r["Итоговая цена в руб."] = Math.Round(Form1.GasController.newGasData.ResultPrice, 2);
                     break;
 

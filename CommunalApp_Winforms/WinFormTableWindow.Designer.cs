@@ -41,13 +41,13 @@ namespace CommunalApp_Winforms
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(26, 35);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(649, 352);
+            this.dataGridView1.Size = new System.Drawing.Size(733, 352);
             this.dataGridView1.TabIndex = 0;
             // 
             // deleteButton
             // 
             this.deleteButton.BackColor = System.Drawing.Color.PowderBlue;
-            this.deleteButton.Location = new System.Drawing.Point(716, 175);
+            this.deleteButton.Location = new System.Drawing.Point(780, 178);
             this.deleteButton.Name = "deleteButton";
             this.deleteButton.Size = new System.Drawing.Size(98, 53);
             this.deleteButton.TabIndex = 1;
@@ -60,7 +60,7 @@ namespace CommunalApp_Winforms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(861, 428);
+            this.ClientSize = new System.Drawing.Size(909, 428);
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.dataGridView1);
             this.ForeColor = System.Drawing.SystemColors.ControlText;

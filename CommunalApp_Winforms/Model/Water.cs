@@ -24,6 +24,7 @@ namespace CommunalApp_Winforms.Model
         /// </summary>
         public int VolumeNow { get; set; }
         /// <summary>
+        /// <summary>
         /// Дата начала отсчета
         /// </summary>
         public DateTime FromDate { get; set; }
